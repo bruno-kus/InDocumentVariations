@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class MySegment {
+    /*
+    może podpinanie wartości do propertisa nie być takie dobre
+     */
     public final List<String> variations;
 
     IntegerProperty currentIndex = new SimpleIntegerProperty(-1);
