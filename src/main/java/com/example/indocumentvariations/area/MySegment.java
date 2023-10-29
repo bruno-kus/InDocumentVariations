@@ -6,13 +6,26 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 public class MySegment {
-    public final List<String> variations;
+    /*
+    okej
+    i problem jest w tym, że obydwa segmenty dzielą listę
+    nie myślałem o tym w ten sposób
+    tak jakbym znowu potrzebował śledzenia zmian...
+
+    tak!
+    że 2 krotnie odnoszę się do tego który dzielę
+    ale żeby stworzyć podsegment modyfikuję listę którą dzielą obydwa!
+     */
+
+    public final ObservableList<String> variations;
 
     IntegerProperty currentIndex = new SimpleIntegerProperty(-1);
 
@@ -20,25 +33,32 @@ public class MySegment {
 
 
     public MySegment(MySegment mySegment, int i, int i1) {
+        System.out.println("MySegment::MySegment");
         this.variations = mySegment.variations;
         this.setCurrentIndex(mySegment.getCurrentIndex());
+        System.out.printf("getCurrentText() -> %s\n", getCurrentText());
 
         {
             currentTextProperty().bind(Bindings.createStringBinding(() -> {
 //            System.out.printf("MySegment::\nvariations -> %s\n", variations);
 //                System.out.println("MySegment::$binding lambda$");
 //                System.out.printf("variations -> %s\ngetCurrentIndex() -> %d\n", variations, getCurrentIndex());
+                System.out.println("MySegment::$binding$");
                 return variations.isEmpty() ? "BACKSLASH-ZERO" : variations.get(getCurrentIndex());
-            }, currentIndexProperty()));
+            }, currentIndexProperty(), variations));
+            System.out.println("DONE BINDING");
         }
 
-        System.out.printf("getCurrentText() -> %s\n.substring(%d, %d) -> %s\n", getCurrentText(), i, i1, getCurrentText().substring(i, i1));
-//        variations.set(getCurrentIndex(), variations.get(getCurrentIndex()).substring(i, i1));
 
+        System.out.printf("getCurrentText() -> %s\n.substring(%d, %d) -> %s\n", getCurrentText(), i, i1, getCurrentText().substring(i, i1));
+
+        variations.set(getCurrentIndex(), variations.get(getCurrentIndex()).substring(i, i1));
+        System.out.printf("variations after setting -> %s", variations);
+        System.out.printf("getCurrentText() -> %s\n", getCurrentText());
     }
 
     public MySegment(String text) { // from scratch constructor
-        variations = new LinkedList<>();
+        variations = FXCollections.observableArrayList();
         {
             currentTextProperty().bind(Bindings.createStringBinding(() -> {
 //            System.out.printf("MySegment::\nvariations -> %s\n", variations);
@@ -100,6 +120,10 @@ public class MySegment {
     }
     public void cloneVariation() {
         variations.add(variations.get(getCurrentIndex()));
+    }
+
+    boolean isEmpty() {
+        return getCurrentText().isEmpty();
     }
 
     @Override

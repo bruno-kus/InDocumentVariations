@@ -6,8 +6,10 @@ import org.fxmisc.richtext.model.TextOps;
 import java.util.Optional;
 
 public class MySegmentOps <S> extends SegmentOpsBase<MySegment, S> {
+    // mogę mieć nawet osobną klasę dla pustego segmentu, która implementuje to co pełny
+    // no tak, typ strefy może być abstrakcyjny!
     public MySegmentOps() {
-        super(new MySegment("EMPTY"));
+        super(new MySegment(""));
     }
 
     @Override
@@ -34,10 +36,12 @@ public class MySegmentOps <S> extends SegmentOpsBase<MySegment, S> {
 
     @Override
     public int length(MySegment mySegment) {
-        var r=  mySegment.getCurrentText().length();
-        System.out.printf("length: %s\n", r);
-        return r;
+//        var r=  mySegment.getCurrentText().length();
+//        System.out.printf("length: %s\n", r);
+//        return r;
+        return mySegment.isEmpty() ? 0 : 1;
     }
+
 
     @Override
     public Optional<MySegment> joinSeg(MySegment mySegment, MySegment seg1) {
