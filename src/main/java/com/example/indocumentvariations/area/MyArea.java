@@ -9,8 +9,7 @@ import org.reactfx.util.Either;
 import java.util.List;
 import java.util.Optional;
 
-public class MyArea extends GenericStyledArea<Nil, Either<String, MySegment>, Nil> {
-    public static final Nil NIL = new Nil();
+public class MyArea extends GenericStyledArea<Void, Either<String, MySegment>, Void> {
 
     // muszę mieć przynajmniej jeden typ tekstowy
     // ale mógłbym go teoretycznie zupełnie zminimalizować
@@ -27,9 +26,9 @@ public class MyArea extends GenericStyledArea<Nil, Either<String, MySegment>, Ni
     pytanie brzmi czy na pewno chce mieć Either?
     wydawałoby się, że tak, bo wtedy by było mniej pamięci zużywane
      */
-    private static final TextOps<String, Nil> STYLED_TEXT_OPS = SegmentOps.styledTextOps();
-    private static final MySegmentOps<Nil> MY_OPS = new MySegmentOps<>();
-    private static final TextOps<Either<String, MySegment>, Nil> EITHER_OPS = STYLED_TEXT_OPS._or(MY_OPS, (e1, e2) -> Optional.empty());
+    private static final TextOps<String, Void> STYLED_TEXT_OPS = SegmentOps.styledTextOps();
+    private static final MySegmentOps<Void> MY_OPS = new MySegmentOps<>();
+    private static final TextOps<Either<String, MySegment>, Void> EITHER_OPS = STYLED_TEXT_OPS._or(MY_OPS, (e1, e2) -> Optional.empty());
 
     //    private static final TextOps<MySegment, Void> ops = OPS;
     /*
@@ -37,10 +36,10 @@ public class MyArea extends GenericStyledArea<Nil, Either<String, MySegment>, Ni
      */
     public MyArea() {
         super(
-                NIL,
+                null,
                 (t, p) -> {
                 },
-                NIL,
+                null,
                 EITHER_OPS,
                 e -> e.getSegment().unify(
                         TextExt::new,
@@ -51,15 +50,16 @@ public class MyArea extends GenericStyledArea<Nil, Either<String, MySegment>, Ni
         );
     }
 
+
     public void replaceWithMySegment(int start, int end, Either<String, MySegment> mySegment) {
-        super.replace(start, end, mySegment, NIL);
+        super.replace(start, end, mySegment, null);
     }
 
     public void replaceSelectionWithMySegment() {
         System.out.println("MyArea::replaceSelectionWithMySegment");
         MySegment fromSelection = new MySegment(getText(getSelection()));
         Either<String, MySegment> right = Either.right(fromSelection);
-        replaceSelection(ReadOnlyStyledDocument.fromSegment(right, NIL, NIL, EITHER_OPS));
+        replaceSelection(ReadOnlyStyledDocument.fromSegment(right, null, null, EITHER_OPS));
     }
 
     public List<MySegment> getMySegments() {
@@ -71,6 +71,8 @@ public class MyArea extends GenericStyledArea<Nil, Either<String, MySegment>, Ni
                 flatMap(e -> e.getSegments().stream()).
                 toList();
     }
+
+
     /*
     i teraz teoretycznie bym mógł nadpisać kontrolę tego, co robi back space...
     albo subsekwencję mieć, która podaję wskaźnik do listy następcy

@@ -7,4 +7,5 @@ module com.example.indocumentvariations {
     opens com.example.indocumentvariations to javafx.fxml;
     exports com.example.indocumentvariations;
     exports com.example.indocumentvariations.area;
+    opens com.example.indocumentvariations.area to javafx.fxml;
 }

@@ -1,4 +1,4 @@
-package com.example.indocumentvariations;
+package com.example.indocumentvariations.area;
 
 import com.example.indocumentvariations.area.MyArea;
 import javafx.beans.binding.Bindings;

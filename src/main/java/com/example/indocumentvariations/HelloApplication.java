@@ -1,6 +1,7 @@
 package com.example.indocumentvariations;
 
 import com.example.indocumentvariations.area.MyArea;
+import com.example.indocumentvariations.area.MyRoot;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
