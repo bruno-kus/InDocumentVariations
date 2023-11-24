@@ -28,17 +28,18 @@ public class Tag {
     2. tagi przypisane do tego modelu
     3. guziki, które każą strefie pisać
      */
-    public String name;
-    public ObjectProperty<Paint> color;
+//    public String name;
     public BigModel model;
+    public BackgroundColor enumColor;
+//    public ObjectProperty<Paint> color;
 
-    public Paint getColor() {
-        return color.get();
-    }
+//    public Paint getColor() {
+//        return color.get();
+//    }
 
-    public ObjectProperty<Paint> colorProperty() {
-        return color;
-    }
+//    public ObjectProperty<Paint> colorProperty() {
+//        return color;
+//    }
 
     public Tag() {
         /*
@@ -46,26 +47,38 @@ public class Tag {
         można wiele fajnych rzeczy zrobić
         */
     }
-    public Tag(String name, Color color, BigModel model) {
+//    public Tag(String name, Color color, BigModel model) {
+//        this.model = model;
+//        this.name = name;
+//        this.color = new SimpleObjectProperty<>(color);
+//    }
+
+
+    public Tag(String name, BigModel model, BackgroundColor enumColor) {
+//        this.name = name;
         this.model = model;
-        this.name = name;
-        this.color = new SimpleObjectProperty<>(color);
+        this.enumColor = enumColor;
     }
 
+
+    @Override
     public String toString() {
-        return "GroupTag{" + name + "}";
-    }
-    public int hashCode() {
-        return name.hashCode();
+        return "Tag{" +
+                "model=" + model +
+                ", enumColor=" + enumColor +
+                '}';
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj.getClass() != getClass()) {
-            return false;
-        } else {
-            Tag that = (Tag) obj;
-            return Objects.equals(this.name, that.name);
-        }
+    public int hashCode() {
+        return Objects.hash(model, enumColor);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return model.equals(tag.model) && enumColor == tag.enumColor;
     }
 }

@@ -5,6 +5,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 
 public class MyRoot extends VBox  { // nie powinno!
     // zamiast tego zamiast dodawać rzeczy do samej siebie dodaję do VBoxa
@@ -30,20 +33,22 @@ public class MyRoot extends VBox  { // nie powinno!
     {
         var s = new ColorModelMap(bigModel);
 
-    }
-    class MyButton extends Button {
-        MyButton(String s, Tag group) {
-            super(s);
-            setOnAction(e -> area.writeMySegment(group));
-        }
-    }
-    {
+        Arrays.stream(BackgroundColor.values())
+                .map(bc -> new ColorModelMap.MyButton(bc.toString(), bc))
+                .collect(Collectors.toUnmodifiableSet());
+
+
         /*
+        właśnie wygenerowałem 8 guzików
          */
-        MyButton pinkButton = new MyButton("Pink", Tag.PINK);
-        MyButton orangeButton = new MyButton("Orange", Tag.ORANGE);
-        MyButton greenButton = new MyButton("Green", Tag.GREEN);
-        MyButton blueButton = new MyButton("Blue", Tag.BLUE);
+
+        /*
+        tagi powinny być porównywalne
+         */
+    }
+
+    {
+
 
 
 

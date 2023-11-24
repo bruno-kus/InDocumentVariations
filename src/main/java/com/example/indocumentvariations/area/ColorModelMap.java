@@ -9,7 +9,7 @@ public class ColorModelMap extends EnumMap<BackgroundColor, BigModel> {
         super(BackgroundColor.class);
         replaceAll((k, v) -> bigModel);
     }
-    class MyButton extends Button {
+    static class MyButton extends Button {
         MyButton(String s, BackgroundColor backgroundColor) {
             super(s);
             setOnAction(e -> area.writeSegment(backgroundColor));
