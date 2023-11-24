@@ -9,7 +9,7 @@ public class MySegmentOps <S> extends SegmentOpsBase<MySegment, S> {
     // mogę mieć nawet osobną klasę dla pustego segmentu, która implementuje to co pełny
     // no tak, typ strefy może być abstrakcyjny!
     public MySegmentOps() {
-        super(new MySegment(""));
+        super(MySegment.empty());
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MySegmentOps <S> extends SegmentOpsBase<MySegment, S> {
 
 //        return new MySegment(mySegment, start, end);
         System.out.printf("mySegment:\n%s\n", mySegment);
-        return new MySegment(mySegment, i, i1);
+        return mySegment;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MySegmentOps <S> extends SegmentOpsBase<MySegment, S> {
 //        var r=  mySegment.getCurrentText().length();
 //        System.out.printf("length: %s\n", r);
 //        return r;
-        return mySegment.isEmpty() ? 0 : 1;
+        return mySegment.getInVariationIndex() < 0 ? 0 : 1;
     }
 
 

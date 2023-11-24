@@ -4,14 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 
 public class MySegment {
     /*
@@ -24,115 +17,51 @@ public class MySegment {
     że 2 krotnie odnoszę się do tego który dzielę
     ale żeby stworzyć podsegment modyfikuję listę którą dzielą obydwa!
      */
+    Tag tag; // powinien być final ale weź ogarnij konstruktor, musiałbym zrobić, żeby empty był nieco inteligentniejszy
+    IntegerProperty inVariationIndex = new SimpleIntegerProperty(-1);
+    StringBinding currentText;
 
-    public final ObservableList<String> variations;
-
-    IntegerProperty currentIndex = new SimpleIntegerProperty(-1);
-
-    StringProperty currentText = new SimpleStringProperty();
-
-
-    public MySegment(MySegment mySegment, int i, int i1) {
-        System.out.println("MySegment::MySegment");
-        this.variations = mySegment.variations;
-        this.setCurrentIndex(mySegment.getCurrentIndex());
-        System.out.printf("getCurrentText() -> %s\n", getCurrentText());
-
-        {
-            currentTextProperty().bind(Bindings.createStringBinding(() -> {
-//            System.out.printf("MySegment::\nvariations -> %s\n", variations);
-//                System.out.println("MySegment::$binding lambda$");
-//                System.out.printf("variations -> %s\ngetCurrentIndex() -> %d\n", variations, getCurrentIndex());
-                System.out.println("MySegment::$binding$");
-                return variations.isEmpty() ? "BACKSLASH-ZERO" : variations.get(getCurrentIndex());
-            }, currentIndexProperty(), variations));
-            System.out.println("DONE BINDING");
-        }
-
-
-        System.out.printf("getCurrentText() -> %s\n.substring(%d, %d) -> %s\n", getCurrentText(), i, i1, getCurrentText().substring(i, i1));
-
-        variations.set(getCurrentIndex(), variations.get(getCurrentIndex()).substring(i, i1));
-        System.out.printf("variations after setting -> %s", variations);
-        System.out.printf("getCurrentText() -> %s\n", getCurrentText());
+    static MySegment empty() {
+        return new MySegment();
     }
+    private MySegment() {
 
-    public MySegment(String text) { // from scratch constructor
-        variations = FXCollections.observableArrayList();
-        {
-            currentTextProperty().bind(Bindings.createStringBinding(() -> {
-//            System.out.printf("MySegment::\nvariations -> %s\n", variations);
-//                System.out.println("MySegment::$binding lambda$");
-//                System.out.printf("variations -> %s\ngetCurrentIndex() -> %d\n", variations, getCurrentIndex());
-                return variations.isEmpty() ? "BACKSLASH-ZERO" : variations.get(getCurrentIndex());
-            }, currentIndexProperty()));
-        }
-
-
-
-        System.out.println("MySegment::MySegment");
-        System.out.printf("text -> %s\n", text);
-        variations.add(text);
-//        System.out.printf("variations -> %s\n", variations);
-        setCurrentIndex(0);
-//        System.out.printf("getCurrentIndex() -> %d\n", getCurrentIndex());
-//        System.out.println(variations.get(getCurrentIndex()));
-//        System.out.printf("getCurrentText() -> %s\n", getCurrentText());
-//        System.out.println();
     }
-
+    /*
+    każdy tag może należeć do jakiegoś modelu!
+    wtedy mogę mieć dwa takie same tagi, ale należące do różnych modeli
+    i to bardzo dobrze!
+     */
+    MySegment(Tag tag) {
+        this.tag = tag;
+        var bigModel = tag.model;
+        currentText = Bindings.createStringBinding(
+                () -> bigModel.getModel(tag).getActiveVariation().get(inVariationIndex.getValue()),
+                bigModel.getModel(tag).activeVariationBinding(), inVariationIndex
+                );
+    }
     public String getCurrentText() {
-//        return currentTextProperty().get();
-//        return stringBinding.get();
-        return currentTextProperty().getValue();
+        return currentText.get();
     }
-
-    public StringProperty currentTextProperty() {
-        return currentText;
+    public int getInVariationIndex() {
+        return inVariationIndex.get();
     }
-
-
-
-
-
-    public int getCurrentIndex() {
-        return currentIndex.get();
+    public IntegerProperty inVariationIndexProperty() {
+        return inVariationIndex;
     }
-
-    public IntegerProperty currentIndexProperty() {
-        return currentIndex;
+    public void setCurrentIndex(int index) {
+        inVariationIndexProperty().setValue(index);
     }
-
-    public boolean setCurrentIndex(int index) {
-        if (!variations.isEmpty() && index >= 0 && index < variations.size()) {
-            this.currentIndexProperty().setValue(index);
-            return true;
-        } else {
-            System.out.printf("variation.size() is %d, index is %d", variations.size(), index);
-            return false;
-        }
-    }
-    public boolean increment() {
-        return setCurrentIndex(getCurrentIndex() + 1);
-    }
-    public boolean decrement() {
-        return setCurrentIndex(getCurrentIndex() - 1);
-    }
-    public void cloneVariation() {
-        variations.add(variations.get(getCurrentIndex()));
-    }
-
-    boolean isEmpty() {
-        return getCurrentText().isEmpty();
-    }
-
     @Override
     public String toString() {
         return "MySegment{" +
-                "variations=" + variations +
-                ", currentIndex=" + currentIndex +
+                ", currentIndex=" + inVariationIndex +
 //                ", currentText=" + currentText +
-//                ", getCurrentText()=" + getCurrentText() +
+                ", getCurrentText()=" + getCurrentText() +
                 '}';
+    }
+
+    public Tag getTag() {
+        return tag;
     }
 }
