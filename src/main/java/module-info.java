@@ -2,6 +2,7 @@ module com.example.indocumentvariations {
     requires javafx.controls;
     requires javafx.fxml;
     requires org.fxmisc.richtext;
+    requires reactfx;
 
 
     opens com.example.indocumentvariations to javafx.fxml;

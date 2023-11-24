@@ -4,12 +4,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.model.*;
-import org.reactfx.util.Either;
+
+import org.reactfx.util.*;
 
 import java.util.List;
 import java.util.Optional;
 
 public class MyArea extends GenericStyledArea<Void, Either<String, MySegment>, String> {
+
 
     // zrobić wspólny interfejs Segment, który implementuje zarówno MyString, jak i MySegment
     // w Opsach korzystać z instanceof do wyciągania realnego typu i delegowania do odpowiednich opsów konkretnych

@@ -7,11 +7,13 @@ import org.fxmisc.richtext.TextExt;
 import org.fxmisc.richtext.model.StyledSegment;
 import org.reactfx.util.Either;
 import java.util.function.Function;
+// import org.reactfx.util.*;
 
 public class MyFactory implements Function<StyledSegment<Either<String, MySegment>, String>, Node> {
     @Override
     public Node apply(StyledSegment<Either<String, MySegment>, String> styledSegment) {
-        var either = styledSegment.getSegment();
+
+        Either<String, MySegment>  either = styledSegment.getSegment();
         var style = styledSegment.getStyle();
         TextExt text = new TextExt();
         if (either.isLeft()) {
